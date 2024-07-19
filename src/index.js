@@ -55,3 +55,11 @@ const otherFoods = [
 ]
 
 // write your code here
+const restaurantMenu = document.getElementById("restaurant-menu")
+
+for(let index = 0; index < burgers.length; index++) {
+    const imageElement = document.createElement("img")
+    imageElement.className = "burger"
+    imageElement.srcburgers[index].image
+    restaurantMenu.appendChild(imageElement)
+}
