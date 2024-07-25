@@ -45,6 +45,47 @@ newFoodForm.addEventListener('submit', (event) => {
     addFoodImageToRestaurantMenu(newFood)
 
     // write your code here
+    //Optimistic rendering approach
+    // fetch("http://localhost:3000/foods", {
+    //     method: "POST",
+    //     headers: {
+    //         "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify(newFood)
+    // })
+    // .then(response => response.json())
+    // .then(newFood => newFood)
+
+    //Pessimistic rendering approach
+    // fetch("http://localhost:3000/foods", {
+    //     method: "POST",
+    //     headers: {
+    //         "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify(newFood)
+    // })
+    // .then(response => response.json())
+    // .then(newFood => addFoodImageToRestaurantMenu(newFood))
+    // .catch(() => alert("Something went wrong"))
+    // //.catch(error => error)
+
+    // newFoodForm.reset()
+
+    fetch("http://localhost:3000/foods", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newFood)
+    })
+    .then(response => {
+        if(response.ok) {
+            response.json().then(newFood => addFoodImageToRestaurantMenu(newFood))
+        } else {
+            alert("Unable to add new food")
+        }
+    })
+    //.catch(error => error)
 
     newFoodForm.reset()
 })
