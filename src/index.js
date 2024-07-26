@@ -1,3 +1,5 @@
+let currentlyDisplayedFoodId;
+
 const restaurantMenu = document.getElementById('restaurant-menu')
 
 fetch('http://localhost:3000/foods')
@@ -20,6 +22,7 @@ function addFoodImageToRestaurantMenu(food){
 }
 
 function displayFoodDetails(food){
+    currentlyDisplayedFoodId = food.id
     const foodDetailImageElement = document.getElementsByClassName('detail-image')[0]
     foodDetailImageElement.src = food.image
     const foodNameElement = document.getElementsByClassName('name')[0]
@@ -72,7 +75,33 @@ addToCartForm.addEventListener('submit', (event) => {
     const numberToAddInputElement = document.getElementById('number-to-add')
     const numberInCartCountElement = document.getElementById('number-in-cart-count')
     const sum = Number(numberInCartCountElement.textContent) + Number(numberToAddInputElement.value)
+    
     numberInCartCountElement.textContent = sum
+
+    // fetch(`http://localhost:3000/foods${currentlyDisplayedFoodId}`, {
+    //     method: "PATCH",
+    //     headers: {
+    //         "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify({number_in_cart: sum})
+    // })
+
+    // Pessimistic Rendering approach to updating DOM after the PATCH is successful
+    fetch(`http://localhost:3000/foods${currentlyDisplayedFoodId}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({number_in_cart: sum})
+    })
+    .then(response => {
+        if(response.ok) {
+            response.json().then(updatedFood => numberInCartCountElement.textContent = updatedFood,number_in_cart)
+        } else {
+            alert(`Error: Unable to update food (#${currentlyDisplayedFoodId})`)
+        }
+    })
+    .then(updatedFood => numberInCartCountElement.textContent = updatedFood)
 
     addToCartForm.reset()
 })
